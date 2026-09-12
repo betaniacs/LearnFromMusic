@@ -1,0 +1,50 @@
+# `docker compose up --build` runs the whole app at http://localhost:8080
+#
+# Requires a .env file next to this one (copy .env.example) holding
+# ANTHROPIC_API_KEY and COOKIE_SECRET.
+
+services:
+  backend:
+    build: ./backend
+    # Reads ANTHROPIC_API_KEY, COOKIE_SECRET and MODEL_ID from .env at RUN time.
+    # Nothing secret is baked into the image, so the image itself is shareable.
+    env_file: .env
+    environment:
+      # PROVIDER, GROQ_API_KEY / ANTHROPIC_API_KEY and COOKIE_SECRET all come
+      # from .env above. Only the selected provider's key needs a value.
+      #
+      # nginx is exactly one hop in front of the API, so trust exactly one
+      # X-Forwarded-For entry. Trusting more would let a client spoof its IP
+      # and slip past the rate limiter.
+      TRUST_PROXY: "1"
+      DB_PATH: /app/data/decks.db
+    volumes:
+      # A named volume, so saved decks outlive `docker compose down` and every
+      # image rebuild. Baking the database into the image would reset the
+      # library on each deploy; a bind mount would risk a macOS/Linux file
+      # locking mismatch under SQLite.
+      - deck-data:/app/data
+    # `expose` publishes nothing to the host — the API is reachable only from
+    # other containers on this network. The browser reaches it through nginx.
+    # Swap to `ports: ["3001:3001"]` temporarily if you want to curl it directly.
+    expose:
+      - "3001"
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      # host:container — visit http://localhost:8080
+      - "8080:80"
+    depends_on:
+      backend:
+        # Waits for the Dockerfile's HEALTHCHECK to pass, not merely for the
+        # container to start, so the first request can't race the API's boot.
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  deck-data:
+
+# Compose creates a default network for these services automatically, which is
+# what lets nginx resolve the hostname `backend`.

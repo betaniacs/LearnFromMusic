@@ -1,0 +1,25 @@
+{
+  "name": "learnfrommusic-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "API for Learn from Music — holds the Anthropic API key server-side and persists decks to SQLite.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.125.0",
+    "better-sqlite3": "^12.11.1",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
+    "groq-sdk": "^1.6.0",
+    "zod": "^4.6.2"
+  }
+}

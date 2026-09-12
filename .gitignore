@@ -1,0 +1,22 @@
+# Secrets
+.env
+.env.local
+*.env
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# SQLite database and its write-ahead log
+backend/data/
+*.db
+*.db-wal
+*.db-shm
+
+# Logs / OS cruft
+*.log
+npm-debug.log*
+.DS_Store

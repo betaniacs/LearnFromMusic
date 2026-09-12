@@ -1,0 +1,12 @@
+# Never copy host node_modules into the image: better-sqlite3 compiles a
+# platform-specific binary, and macOS artifacts don't run on Linux.
+node_modules
+npm-debug.log*
+
+# The SQLite database belongs in a volume, not baked into the image.
+data
+
+# Secrets are injected at runtime by compose, never built in.
+.env
+.env.*
+!.env.example
