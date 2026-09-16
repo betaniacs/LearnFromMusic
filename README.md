@@ -35,8 +35,6 @@ cd backend  && npm run dev    # API on :3001
 cd frontend && npm run dev    # UI  on :5173
 ```
 
-Open http://localhost:5173. Vite proxies `/api` to the backend, so the browser
-sees a single origin and no CORS setup is needed.
 
 ## Running with Docker
 
