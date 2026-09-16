@@ -44,10 +44,6 @@ docker compose up --build
 Then open http://localhost:8080. Saved decks persist in the `deck-data` volume
 across rebuilds and `docker compose down`; `docker compose down -v` deletes them.
 
-The backend is not published to the host — it listens only on the compose
-network, and the browser reaches it through nginx at `/api`. Built image sizes
-are 461 MB (backend, needs the Node runtime) and 76 MB (frontend, nginx only).
-
 ## API
 
 | Method   | Route                | Purpose                                   |
@@ -79,9 +75,6 @@ database with no authentication. Because it is community-submitted it contains
 occasional joke entries, so results shorter than 200 characters or with fewer
 than four lines are discarded and the longest usable match wins.
 
-Every step is best-effort: any failure leaves the field empty and you paste the
-text yourself, exactly as before. Raw lyrics are still never written to the
-database — only the generated study material is.
 
 Only Spotify, Apple Music and YouTube hostnames are ever fetched. The allowlist
 is enforced before any request is made, since the server is following a
